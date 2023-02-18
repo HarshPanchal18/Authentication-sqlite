@@ -2,58 +2,61 @@ package com.example.authentication_with_sqlite
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.authentication_with_sqlite.databinding.ActivityMainBinding
+import com.example.authentication_with_sqlite.databinding.ActivityRegisterBinding
 import com.example.authentication_with_sqlite.model.User
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_register.*
 
 class Register : AppCompatActivity() {
 
     private lateinit var inputValidation: InputValidation
     private lateinit var databaseHelper: DBHelper
+    private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding=ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         supportActionBar!!.hide()
 
         inputValidation = InputValidation(this)
         databaseHelper = DBHelper(this)
 
-        register.setOnClickListener { postDataToSQLite() }
-        loginbtn.setOnClickListener { finish() }
+        binding.register.setOnClickListener { postDataToSQLite() }
+        binding.loginbtn.setOnClickListener { finish() }
 
     }
 
     private fun postDataToSQLite() {
-        if(!inputValidation.isInputEditTextFilled(teditEmail, tilEmail, getString(R.string.error_message_email)))
+        if(!inputValidation.isInputEditTextFilled(binding.teditEmail, binding.tilEmail, getString(R.string.error_message_email)))
             return
 
-        if(!inputValidation.isInputEditTextEmail(teditEmail, tilEmail!!, getString(R.string.error_message_email)))
+        if(!inputValidation.isInputEditTextEmail(binding.teditEmail, binding.tilEmail, getString(R.string.error_message_email)))
             return
 
-        if (!inputValidation.isInputEditTextFilled(teditPassword, tilPassword, getString(R.string.error_message_password)))
+        if (!inputValidation.isInputEditTextFilled(binding.teditPassword, binding.tilPassword, getString(R.string.error_message_password)))
             return
 
-        if(!databaseHelper.checkUser(teditEmail.text.toString().trim())) {
+        if(!databaseHelper.checkUser(binding.teditEmail.text.toString().trim())) {
             val user= User(
-                name=teditName.text.toString().trim(),
-                email=teditEmail.text.toString().trim(),
-                password = teditPassword.text.toString().trim()
+                name=binding.teditName.text.toString().trim(),
+                email=binding.teditEmail.text.toString().trim(),
+                password = binding.teditPassword.text.toString().trim()
             )
 
             databaseHelper.addUser(user)
-            Snackbar.make(nestedScrollView!!, getString(R.string.success_message), Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.nestedScrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show()
             emptyInputEditText()
         } else { // record already exists
-            Snackbar.make(nestedScrollView!!, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.nestedScrollView, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show()
         }
     }
 
     private fun emptyInputEditText() {
-        teditName!!.text = null
-        teditEmail!!.text = null
-        teditPassword!!.text = null
-        tEditConfirmPassword!!.text = null
+        binding.teditName.text = null
+        binding.teditEmail.text = null
+        binding.teditPassword.text = null
+        binding.tEditConfirmPassword.text = null
     }
 }
