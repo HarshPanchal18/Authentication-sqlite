@@ -48,6 +48,7 @@ class Register : AppCompatActivity() {
             databaseHelper.addUser(user)
             Snackbar.make(binding.nestedScrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show()
             emptyInputEditText()
+            finish()
         } else { // record already exists
             Snackbar.make(binding.nestedScrollView, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show()
         }
